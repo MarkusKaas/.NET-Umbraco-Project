@@ -16,6 +16,10 @@ _Avoid_: Conversation, Thread, Chat
 One prompt-response pair within a Session — a Visitor's question and the AI's reply, stored together as a single row.
 _Avoid_: Message (Message is reserved for one side of an Exchange when speaking to the Mistral API), Turn
 
+**Message Channel**:
+The seam to an LLM provider. Takes a flat sequence of **Messages** (role: `user` / `assistant`) plus a model name, returns the assistant's reply text. Knows nothing of Visitors, Sessions, or Exchanges — those are translated into Messages by the Exchange intake module before calling the Channel. One Channel adapter per provider (today: Mistral).
+_Avoid_: AI Client, LLM Service, Provider
+
 ## Relationships
 
 - A **Visitor** has zero or more **Sessions**
