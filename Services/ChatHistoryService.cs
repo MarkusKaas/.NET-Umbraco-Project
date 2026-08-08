@@ -3,7 +3,7 @@ using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace MyCustomUmbracoProject.Services
 {
-    public class ChatHistoryService
+    public class ChatHistoryService : IChatHistoryService
     {
         private readonly IScopeProvider _scopeProvider;
         private volatile bool _tableEnsured = false;
@@ -56,26 +56,26 @@ namespace MyCustomUmbracoProject.Services
             }
         }
 
-        public void Save(ChatMessage message)
+        public void Save(Exchange exchange)
         {
             EnsureTable();
-            message.CreatedAt = DateTime.UtcNow;
+            exchange.CreatedAt = DateTime.UtcNow;
             using var scope = _scopeProvider.CreateScope();
-            scope.Database.Insert(message);
+            scope.Database.Insert(exchange);
             scope.Complete();
         }
 
-        public List<ChatMessage> GetBySession(string sessionId, int limit = 20)
+        public List<Exchange> GetBySession(string sessionId, int limit = 20)
         {
             EnsureTable();
             var safeLimit = Math.Clamp(limit, 1, 200);
             using var scope = _scopeProvider.CreateScope();
-            var messages = scope.Database.Fetch<ChatMessage>(
+            var exchanges = scope.Database.Fetch<Exchange>(
                 $"SELECT TOP {safeLimit} * FROM ChatMessages WHERE SessionId = @0 ORDER BY CreatedAt DESC",
                 sessionId);
             scope.Complete();
-            messages.Reverse();
-            return messages;
+            exchanges.Reverse();
+            return exchanges;
         }
 
         public List<ChatSessionSummary> GetAllSessions(string userId)
