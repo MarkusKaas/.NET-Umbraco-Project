@@ -1,6 +1,10 @@
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<MyCustomUmbracoProject.Services.ChatHistoryService>();
+builder.Services.AddSingleton<MyCustomUmbracoProject.Services.IChatHistoryService>(sp => sp.GetRequiredService<MyCustomUmbracoProject.Services.ChatHistoryService>());
+builder.Services.AddSingleton<MyCustomUmbracoProject.Services.IMessageChannel, MyCustomUmbracoProject.Services.MistralMessageChannel>();
+builder.Services.AddSingleton<MyCustomUmbracoProject.Services.IExchangeIntake, MyCustomUmbracoProject.Services.ExchangeIntake>();
+builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 
 builder.CreateUmbracoBuilder()
