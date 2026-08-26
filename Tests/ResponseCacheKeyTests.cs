@@ -9,7 +9,7 @@ public class ResponseCacheKeyTests
     [Fact]
     public void Identical_inputs_produce_identical_keys()
     {
-        var history = new List<ChatMessage>
+        var history = new List<Exchange>
         {
             new() { UserPrompt = "hello", ResponseMarkdown = "hi there" }
         };
@@ -23,11 +23,11 @@ public class ResponseCacheKeyTests
     [Fact]
     public void Different_history_produces_different_key()
     {
-        var pythonContext = new List<ChatMessage>
+        var pythonContext = new List<Exchange>
         {
             new() { UserPrompt = "tell me about python", ResponseMarkdown = "python is..." }
         };
-        var reactContext = new List<ChatMessage>
+        var reactContext = new List<Exchange>
         {
             new() { UserPrompt = "tell me about react", ResponseMarkdown = "react is..." }
         };
@@ -41,7 +41,7 @@ public class ResponseCacheKeyTests
     [Fact]
     public void Different_model_produces_different_key()
     {
-        var history = new List<ChatMessage>();
+        var history = new List<Exchange>();
 
         var smallKey = ResponseCacheKey.Build("mistral-small-latest", "hello", history);
         var largeKey = ResponseCacheKey.Build("mistral-large-latest", "hello", history);
@@ -52,7 +52,7 @@ public class ResponseCacheKeyTests
     [Fact]
     public void Prompt_normalization_is_preserved()
     {
-        var history = new List<ChatMessage>();
+        var history = new List<Exchange>();
 
         var padded = ResponseCacheKey.Build("mistral-small-latest", "  Hello  ", history);
         var clean  = ResponseCacheKey.Build("mistral-small-latest", "hello",      history);
@@ -63,8 +63,8 @@ public class ResponseCacheKeyTests
     [Fact]
     public void Empty_history_is_stable()
     {
-        var first  = ResponseCacheKey.Build("mistral-small-latest", "hello", new List<ChatMessage>());
-        var second = ResponseCacheKey.Build("mistral-small-latest", "hello", new List<ChatMessage>());
+        var first  = ResponseCacheKey.Build("mistral-small-latest", "hello", new List<Exchange>());
+        var second = ResponseCacheKey.Build("mistral-small-latest", "hello", new List<Exchange>());
 
         Assert.Equal(first, second);
     }
