@@ -20,7 +20,7 @@
     var userId    = Context.Request.Cookies["chatUserId"];
     var history   = sessionId != null
         ? ChatHistory.GetBySession(sessionId)
-        : new List<ChatMessage>();
+        : new List<Exchange>();
 
     var pastSessions = userId != null
         ? ChatHistory.GetAllSessions(userId)
